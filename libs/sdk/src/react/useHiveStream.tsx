@@ -88,11 +88,10 @@ export function useHiveStream<
     | UseStreamOptions<StateType, Bag>
     | UseStreamCustomOptions<StateType, Bag>
 ): UseStream<StateType, Bag> | UseStreamCustom<StateType, Bag> {
-  // Call the original useStream hook
-  // TypeScript will resolve the correct overload based on the options type
-  const streamResult = useStream(
-    options as UseStreamOptions<StateType, Bag> & UseStreamCustomOptions<StateType, Bag>
-  );
+  // Call useStream - it handles both option types through its own overloads
+  // TypeScript will infer the union return type
+  // @ts-expect-error - TypeScript can't automatically narrow the union type through overloads in this context
+  const streamResult = useStream(options);
 
   // TODO: Add your custom Hive-specific logic here
   // You can:
