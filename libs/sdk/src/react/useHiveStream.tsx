@@ -75,6 +75,39 @@ export function useHiveStream<
   options: UseStreamCustomOptions<StateType, Bag>
 ): UseStreamCustom<StateType, Bag>;
 
+/**
+ * A custom React hook that extends `useStream` with additional Hive-specific functionality.
+ *
+ * This hook wraps the original `useStream` hook and adds extra features while maintaining
+ * full compatibility with the base implementation. When `useStream` is updated, this hook
+ * automatically inherits all improvements.
+ *
+ * @template StateType The type of the thread state (default: `Record<string, unknown>`)
+ * @template Bag Type configuration bag containing:
+ *   - `ConfigurableType`: Type for the `config.configurable` property
+ *   - `InterruptType`: Type for interrupt values
+ *   - `CustomEventType`: Type for custom events
+ *   - `UpdateType`: Type for the submit function updates
+ *
+ * @example
+ * ```tsx
+ * const stream = useHiveStream({
+ *   assistantId: "my-assistant",
+ *   threadId: "my-thread",
+ *   // ... other options
+ * });
+ * ```
+ */
+export function useHiveStream<
+  StateType extends Record<string, unknown> = Record<string, unknown>,
+  Bag extends {
+    ConfigurableType?: Record<string, unknown>;
+    InterruptType?: unknown;
+    CustomEventType?: unknown;
+    UpdateType?: unknown;
+  } = BagTemplate
+>(options: UseStreamOptions<StateType, Bag>): UseStream<StateType, Bag>;
+
 export function useHiveStream<
   StateType extends Record<string, unknown> = Record<string, unknown>,
   Bag extends {
