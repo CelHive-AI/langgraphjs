@@ -1,4 +1,3 @@
-import { useState } from "react";
 import { useStream } from "./stream.js";
 import {
   BagTemplate,
@@ -8,24 +7,8 @@ import {
   UseStreamOptions,
 } from "./types.js";
 
-function isCustomOptions<
-  StateType extends Record<string, unknown> = Record<string, unknown>,
-  Bag extends {
-    ConfigurableType?: Record<string, unknown>;
-    InterruptType?: unknown;
-    CustomEventType?: unknown;
-    UpdateType?: unknown;
-  } = BagTemplate
->(
-  options:
-    | UseStreamOptions<StateType, Bag>
-    | UseStreamCustomOptions<StateType, Bag>
-): options is UseStreamCustomOptions<StateType, Bag> {
-  return "transport" in options;
-}
-
 /**
- * A custom React hook that extends `useStream` with additional CelHive-specific functionality.
+ * A custom React hook that extends `useStream` with additional Hive-specific functionality.
  *
  * This hook wraps the original `useStream` hook and adds extra features while maintaining
  * full compatibility with the base implementation. When `useStream` is updated, this hook
@@ -40,14 +23,14 @@ function isCustomOptions<
  *
  * @example
  * ```tsx
- * const stream = useCelHiveStream({
+ * const stream = useHiveStream({
  *   assistantId: "my-assistant",
  *   threadId: "my-thread",
  *   // ... other options
  * });
  * ```
  */
-export function useCelHiveStream<
+export function useHiveStream<
   StateType extends Record<string, unknown> = Record<string, unknown>,
   Bag extends {
     ConfigurableType?: Record<string, unknown>;
@@ -58,7 +41,7 @@ export function useCelHiveStream<
 >(options: UseStreamOptions<StateType, Bag>): UseStream<StateType, Bag>;
 
 /**
- * A custom React hook that extends `useStream` with additional CelHive-specific functionality.
+ * A custom React hook that extends `useStream` with additional Hive-specific functionality.
  *
  * This hook wraps the original `useStream` hook and adds extra features while maintaining
  * full compatibility with the base implementation. When `useStream` is updated, this hook
@@ -73,14 +56,14 @@ export function useCelHiveStream<
  *
  * @example
  * ```tsx
- * const stream = useCelHiveStream({
+ * const stream = useHiveStream({
  *   transport: myCustomTransport,
  *   threadId: "my-thread",
  *   // ... other options
  * });
  * ```
  */
-export function useCelHiveStream<
+export function useHiveStream<
   StateType extends Record<string, unknown> = Record<string, unknown>,
   Bag extends {
     ConfigurableType?: Record<string, unknown>;
@@ -92,7 +75,7 @@ export function useCelHiveStream<
   options: UseStreamCustomOptions<StateType, Bag>
 ): UseStreamCustom<StateType, Bag>;
 
-export function useCelHiveStream<
+export function useHiveStream<
   StateType extends Record<string, unknown> = Record<string, unknown>,
   Bag extends {
     ConfigurableType?: Record<string, unknown>;
@@ -105,16 +88,13 @@ export function useCelHiveStream<
     | UseStreamOptions<StateType, Bag>
     | UseStreamCustomOptions<StateType, Bag>
 ): UseStream<StateType, Bag> | UseStreamCustom<StateType, Bag> {
-  // Store this in useState to make sure we're not changing the implementation in re-renders
-  const [isCustom] = useState(isCustomOptions(options));
+  // Call the original useStream hook
+  // TypeScript will resolve the correct overload based on the options type
+  const streamResult = useStream(
+    options as UseStreamOptions<StateType, Bag> & UseStreamCustomOptions<StateType, Bag>
+  );
 
-  // Call the original useStream hook with the appropriate type
-  // eslint-disable-next-line react-hooks/rules-of-hooks
-  const streamResult = isCustom
-    ? useStream(options as UseStreamCustomOptions<StateType, Bag>)
-    : useStream(options as UseStreamOptions<StateType, Bag>);
-
-  // TODO: Add your custom CelHive-specific logic here
+  // TODO: Add your custom Hive-specific logic here
   // You can:
   // 1. Add additional state management with useState/useReducer
   // 2. Add side effects with useEffect
@@ -128,7 +108,7 @@ export function useCelHiveStream<
   // useEffect(() => {
   //   // React to stream changes
   //   if (streamResult.isLoading) {
-  //     console.log('CelHive: Stream started');
+  //     console.log('Hive: Stream started');
   //   }
   // }, [streamResult.isLoading]);
   //

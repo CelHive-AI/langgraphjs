@@ -1,5 +1,5 @@
 export { useStream } from "./stream.js";
-export { useCelHiveStream } from "./useCelHiveStream.js";
+export { useHiveStream } from "./useHiveStream.js";
 export { FetchStreamTransport } from "./stream.custom.js";
 export type {
   MessageMetadata,
